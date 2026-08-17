@@ -9,7 +9,7 @@ import { OverdueInvoiceAlert } from '@/features/Billing/OverdueInvoiceAlert';
 import { useApiGetBillingUsage, useApiGetOverdueInvoices, useCurrentPlan } from '@/hooks/usePlan';
 import { useStore } from '@/store';
 import { track } from '@/utils/analytics';
-import { isLegacyPlan } from '../legacyPlans';
+import { isLegacyPlan } from '../planVisibility';
 import { useSelectedMonth } from '../useSelectedMonth';
 import { FreeUsage } from './FreeUsage';
 import { MonthSelector } from './MonthSelector';
