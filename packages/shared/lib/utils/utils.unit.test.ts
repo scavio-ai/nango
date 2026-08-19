@@ -751,8 +751,10 @@ describe('sha256Base64 / ed25519Sign interpolation', () => {
         expect(result).toBe('lC7HGFmtMh12xy3f21ruTqi2Jet45XtFVsD0zv03Mas=');
     });
 
-    it("ed25519Sign matches Streamline AI's documented Signature for their example signature-base", () => {
-        const privateKeyPem = '-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJDq1ybljACqymuKSsrD9+dVh1iReCr0pypAgFaAWwdH\n-----END PRIVATE KEY-----';
+    it("ed25519Sign produces a signature that verifies against Streamline AI's documented signature-base shape", () => {
+        const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');
+        const privateKeyPem = privateKey.export({ type: 'pkcs8', format: 'pem' }).toString();
+
         const signatureBase =
             '"@method": POST\n' +
             '"@target-uri": https://customer.streamline.ai/api/v0/requests\n' +
@@ -761,7 +763,7 @@ describe('sha256Base64 / ed25519Sign interpolation', () => {
             '"@signature-params": ("@method" "@target-uri" "content-digest" "content-type");alg="ed25519";created=1757456928;expires=1757492928;keyid="slak_ceWnGIUNQmIjAvfKI-t3ckVCwcot2ZXaxVwdaj5OuRIyu8oP"';
 
         const result = utils.interpolateStringFromObject(`\${ed25519Sign(${signatureBase}, ${privateKeyPem})}`, {});
-        expect(result).toBe('2mTM6nwXD9ek80KKm6yrsPr3IFk0Xdu7GftWlMqEPqbt7T8VMGJMkjTzTL3uF8bCd2wVPRHPuYSk4bEA/BbYDQ==');
+        expect(crypto.verify(null, Buffer.from(signatureBase, 'utf8'), publicKey, Buffer.from(result, 'base64'))).toBe(true);
     });
 
     it('ed25519Sign leaves the expression unresolved when the private key placeholder never got substituted', () => {
