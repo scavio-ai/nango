@@ -69,7 +69,6 @@ export const FreeUsage: React.FC = () => {
 
     return (
         <div className="w-full flex flex-col gap-4">
-            {/* Dev-tool override (planOverride.ts), same as the sidebar alert reads. */}
             <UsageLimitBanner state={usageLimitOverride ?? getAggregateUsageState(caps?.data ?? {})} />
             <div className="flex justify-between items-center">
                 <span className="text-text-strong text-body-medium-medium">Usage</span>
